@@ -1,0 +1,24 @@
+resources:
+  jobs:
+    bakehouse_medallion_job:
+      name: bakehouse_medallion_job
+      trigger:
+        pause_status: PAUSED
+        periodic:
+          interval: 1
+          unit: DAYS
+      tasks:
+        - task_key: generar_landing
+          notebook_task:
+            notebook_path: /Workspace/Users/javier.serrano.baltierra@gmail.com/databricks-medallion-bakehouse/notebooks/01_generar_landing
+            base_parameters:
+              batch_id: auto
+            source: WORKSPACE
+        - task_key: pipeline_medallion
+          depends_on:
+            - task_key: generar_landing
+          pipeline_task:
+            pipeline_id: e19b17eb-4a9b-42a0-aec3-736954b56bdf
+      queue:
+        enabled: true
+      performance_target: PERFORMANCE_OPTIMIZED

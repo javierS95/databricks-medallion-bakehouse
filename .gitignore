@@ -2,3 +2,5 @@
 __pycache__/
 *.pyc
 .databricks/
+# Genie Agents no son soportados por Git folders
+*.geniespace.json

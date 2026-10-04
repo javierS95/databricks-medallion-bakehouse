@@ -1,0 +1,743 @@
+{
+  "datasets": [
+    {
+      "name": "26493ca7",
+      "displayName": "customer_metrics",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.gold.customer_metrics",
+        "dimensions": [
+          {
+            "name": "customer_id",
+            "expr": "customer_id",
+            "displayName": "ID de Cliente"
+          },
+          {
+            "name": "current_city",
+            "expr": "current_city",
+            "displayName": "Ciudad"
+          },
+          {
+            "name": "first_purchase",
+            "expr": "first_purchase",
+            "displayName": "Primera Compra"
+          },
+          {
+            "name": "last_purchase",
+            "expr": "last_purchase",
+            "displayName": "Última Compra"
+          }
+        ],
+        "measures": [
+          {
+            "name": "total_spent",
+            "expr": "SUM(total_spent)",
+            "displayName": "Gasto Total",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "n_transactions",
+            "expr": "SUM(n_transactions)",
+            "displayName": "Número de Transacciones"
+          },
+          {
+            "name": "avg_ticket",
+            "expr": "SUM(total_spent) / SUM(n_transactions)",
+            "displayName": "Ticket Promedio",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "e6c9b016",
+      "displayName": "daily_sales_by_franchise",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.gold.daily_sales_by_franchise",
+        "dimensions": [
+          {
+            "name": "transaction_date",
+            "expr": "transaction_date",
+            "displayName": "Fecha de Transacción"
+          },
+          {
+            "name": "franchise_id",
+            "expr": "franchise_id",
+            "displayName": "ID de Franquicia"
+          },
+          {
+            "name": "franchise_name",
+            "expr": "franchise_name",
+            "displayName": "Nombre de Franquicia"
+          },
+          {
+            "name": "franchise_city",
+            "expr": "franchise_city",
+            "displayName": "Ciudad de Franquicia"
+          },
+          {
+            "name": "franchise_country",
+            "expr": "franchise_country",
+            "displayName": "País de Franquicia"
+          }
+        ],
+        "measures": [
+          {
+            "name": "total_revenue",
+            "expr": "SUM(revenue)",
+            "displayName": "Ingresos Totales",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "total_transactions",
+            "expr": "SUM(n_transactions)",
+            "displayName": "Transacciones Totales"
+          },
+          {
+            "name": "total_units",
+            "expr": "SUM(units_sold)",
+            "displayName": "Unidades Vendidas"
+          },
+          {
+            "name": "avg_ticket",
+            "expr": "SUM(revenue) / SUM(n_transactions)",
+            "displayName": "Ticket Promedio",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "b2b78eb4",
+      "displayName": "product_performance",
+      "config": {
+        "version": "1.1",
+        "source": "workspace.gold.product_performance",
+        "dimensions": [
+          {
+            "name": "product",
+            "expr": "product",
+            "displayName": "Producto"
+          }
+        ],
+        "measures": [
+          {
+            "name": "count",
+            "expr": "COUNT(*)",
+            "displayName": "Count"
+          },
+          {
+            "name": "revenue",
+            "expr": "SUM(revenue)",
+            "displayName": "Ingresos",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "revenue_share_pct",
+            "expr": "SUM(revenue_share_pct)",
+            "displayName": "% Participación de Ingresos",
+            "format": {
+              "type": "number",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "n_transactions",
+            "expr": "SUM(n_transactions)",
+            "displayName": "Transacciones"
+          },
+          {
+            "name": "units_sold",
+            "expr": "SUM(units_sold)",
+            "displayName": "Unidades Vendidas"
+          }
+        ]
+      }
+    },
+    {
+      "name": "top_franchises",
+      "displayName": "Top 10 Franquicias por Ingresos",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT franchise_name, SUM(revenue) AS revenue\nFROM workspace.gold.daily_sales_by_franchise\nGROUP BY franchise_name\nORDER BY revenue DESC\nLIMIT 10\n",
+        "dimensions": [
+          {
+            "name": "franchise_name",
+            "expr": "franchise_name",
+            "displayName": "Franquicia"
+          }
+        ],
+        "measures": [
+          {
+            "name": "revenue",
+            "expr": "SUM(revenue)",
+            "displayName": "Ingresos",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "top_customers",
+      "displayName": "Top 20 Clientes por Gasto",
+      "config": {
+        "version": "1.1",
+        "source": "SELECT customer_id, current_city, n_transactions, total_spent, avg_ticket\nFROM workspace.gold.customer_metrics\nORDER BY total_spent DESC\nLIMIT 20\n",
+        "dimensions": [
+          {
+            "name": "customer_id",
+            "expr": "customer_id",
+            "displayName": "ID de Cliente"
+          },
+          {
+            "name": "current_city",
+            "expr": "current_city",
+            "displayName": "Ciudad"
+          }
+        ],
+        "measures": [
+          {
+            "name": "total_spent",
+            "expr": "SUM(total_spent)",
+            "displayName": "Gasto Total",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          },
+          {
+            "name": "n_transactions",
+            "expr": "SUM(n_transactions)",
+            "displayName": "Transacciones"
+          },
+          {
+            "name": "avg_ticket",
+            "expr": "SUM(avg_ticket)",
+            "displayName": "Ticket Promedio",
+            "format": {
+              "type": "currency",
+              "currencyCode": "USD",
+              "decimalPlaces": {
+                "type": "exact",
+                "places": 2.0
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "49a16ee7",
+      "displayName": "Resumen",
+      "layout": [
+        {
+          "widget": {
+            "name": "counter_revenue",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e6c9b016",
+                  "fields": [
+                    {
+                      "name": "measure(total_revenue)",
+                      "expression": "MEASURE(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Ingresos Totales"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_revenue)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_transactions",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e6c9b016",
+                  "fields": [
+                    {
+                      "name": "measure(total_transactions)",
+                      "expression": "MEASURE(`total_transactions`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Transacciones Totales"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(total_transactions)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "counter_avg_ticket",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e6c9b016",
+                  "fields": [
+                    {
+                      "name": "measure(avg_ticket)",
+                      "expression": "MEASURE(`avg_ticket`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Ticket Promedio"
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "measure(avg_ticket)",
+                  "rowNumber": 0
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 8,
+            "y": 0,
+            "width": 4,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "line_revenue_date",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "e6c9b016",
+                  "fields": [
+                    {
+                      "name": "daily(transaction_date)",
+                      "expression": "DATE_TRUNC(\"DAY\", `transaction_date`)"
+                    },
+                    {
+                      "name": "measure(total_revenue)",
+                      "expression": "MEASURE(`total_revenue`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Ingresos por Fecha"
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "daily(transaction_date)",
+                  "displayName": "Day",
+                  "scale": {
+                    "type": "temporal"
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(total_revenue)",
+                  "displayName": "total_revenue",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 3,
+            "width": 12,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_top_franchises",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "top_franchises",
+                  "fields": [
+                    {
+                      "name": "measure(revenue)",
+                      "expression": "MEASURE(`revenue`)"
+                    },
+                    {
+                      "name": "franchise_name",
+                      "expression": "`franchise_name`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "fields": [],
+                  "value": "Top 10 Franquicias por Ingresos"
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "measure(revenue)",
+                  "displayName": "Ingresos",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "franchise_name",
+                  "displayName": "Franquicia",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "x-reversed"
+                    }
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "bar_product_share",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "b2b78eb4",
+                  "fields": [
+                    {
+                      "name": "product",
+                      "expression": "`product`"
+                    },
+                    {
+                      "name": "measure(revenue_share_pct)",
+                      "expression": "MEASURE(`revenue_share_pct`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "fields": [],
+                  "value": "% Participación de Ingresos por Producto"
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "product",
+                  "displayName": "Producto",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y-reversed"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "measure(revenue_share_pct)",
+                  "format": {
+                    "abbreviation": "none",
+                    "decimalPlaces": {
+                      "places": 2,
+                      "type": "exact"
+                    },
+                    "type": "number-plain"
+                  },
+                  "formatTemplate": "{{ @formatted }}%",
+                  "displayName": "% Participación",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 6,
+            "y": 9,
+            "width": 6,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "table_top_customers",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "top_customers",
+                  "fields": [
+                    {
+                      "name": "customer_id",
+                      "expression": "`customer_id`"
+                    },
+                    {
+                      "name": "current_city",
+                      "expression": "`current_city`"
+                    },
+                    {
+                      "name": "measure(total_spent)",
+                      "expression": "MEASURE(`total_spent`)"
+                    },
+                    {
+                      "name": "measure(n_transactions)",
+                      "expression": "MEASURE(`n_transactions`)"
+                    },
+                    {
+                      "name": "measure(avg_ticket)",
+                      "expression": "MEASURE(`avg_ticket`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": "Top 20 Clientes por Gasto"
+              },
+              "version": 2,
+              "widgetType": "table",
+              "encodings": {
+                "columns": [
+                  {
+                    "fieldName": "customer_id"
+                  },
+                  {
+                    "fieldName": "current_city"
+                  },
+                  {
+                    "fieldName": "measure(total_spent)"
+                  },
+                  {
+                    "fieldName": "measure(n_transactions)"
+                  },
+                  {
+                    "fieldName": "measure(avg_ticket)"
+                  }
+                ]
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 15,
+            "width": 12,
+            "height": 8
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    },
+    {
+      "name": "global_filters",
+      "displayName": "Global Filters",
+      "layout": [
+        {
+          "widget": {
+            "name": "date_range_filter",
+            "queries": [
+              {
+                "name": "dashboards/01f1bfb3731715b4950191ef44c5a2f7/datasets/01f1bfb3a408111c87c91dd6ddc95f17_transaction_date",
+                "query": {
+                  "datasetName": "e6c9b016",
+                  "fields": [
+                    {
+                      "name": "transaction_date",
+                      "expression": "`transaction_date`"
+                    },
+                    {
+                      "name": "transaction_date_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "frame": {
+                "showTitle": true,
+                "title": "Rango de Fechas de Transacción"
+              },
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "transaction_date",
+                    "queryName": "dashboards/01f1bfb3731715b4950191ef44c5a2f7/datasets/01f1bfb3a408111c87c91dd6ddc95f17_transaction_date"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 12,
+            "height": 1
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_GLOBAL_FILTERS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}

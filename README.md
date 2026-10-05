@@ -131,3 +131,4 @@ Unity Catalog traces the full flow automatically, at table and column level.
 - Make `daily_sales_by_franchise` and `product_performance` incrementally refreshable.
 - Package pipeline and job as a **Databricks Asset Bundle** for CI/CD deployment across environments.
 - Add column-level comments in gold, to enrich Unity Catalog and Genie context.
+- Same business case modeled as a star schema on BigQuery: [bigquery-bakehouse-star-schema](https://github.com/javierS95/bigquery-bakehouse-star-schema)
